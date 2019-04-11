@@ -1,0 +1,10 @@
+{
+    "name": "johnm/battleship",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Battleship\\": "./src"
+        }
+    }
+}
