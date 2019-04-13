@@ -53,7 +53,7 @@ class Ship {
         $i = (int) rand(0, 9);
         $j = (int) rand(0, 9);
 
-        while (!$grid->isSurroundingEmpty($i,$j)) {
+        while (!$grid->isSurroundingNotShip([$i,$j])) {
             $i = (int) rand(0,9);
             $j = (int) rand(0,9);
         }
@@ -71,13 +71,13 @@ class Ship {
         $firstCellJ = rand(0,9);
         if ($this->rotation === 'H') { //Horizontal Ship
             while (true) {
-                if($grid->isSurroundingEmpty($firstCellI, $firstCellJ)) { //First Cell
-                    if ($grid->isCoordOnGrid($firstCellI, $firstCellJ+1) &&
-                        $grid->isSurroundingEmpty($firstCellI, $firstCellJ+1)) { //Second Cell
-                        if ($grid->isCoordOnGrid($firstCellI, $firstCellJ+2) &&
-                            $grid->isSurroundingEmpty($firstCellI, $firstCellJ+2)) { //Third Cell
-                            if ($grid->isCoordOnGrid($firstCellI, $firstCellJ+3) &&
-                                $grid->isSurroundingEmpty($firstCellI, $firstCellJ+3)) { //Fourth Cell
+                if($grid->isSurroundingNotShip([$firstCellI, $firstCellJ])) { //First Cell
+                    if ($grid->isCellOnGrid([$firstCellI, $firstCellJ+1]) &&
+                        $grid->isSurroundingNotShip([$firstCellI, $firstCellJ+1])) { //Second Cell
+                        if ($grid->isCellOnGrid([$firstCellI, $firstCellJ+2]) &&
+                            $grid->isSurroundingNotShip([$firstCellI, $firstCellJ+2])) { //Third Cell
+                            if ($grid->isCellOnGrid([$firstCellI, $firstCellJ+3]) &&
+                                $grid->isSurroundingNotShip([$firstCellI, $firstCellJ+3])) { //Fourth Cell
                                 $grid->setShip(
                                     [$firstCellI, $firstCellJ],
                                     [$firstCellI, $firstCellJ+1],
@@ -94,13 +94,13 @@ class Ship {
             }
         } else { //Vertical Ship
             while (true) {
-                if($grid->isSurroundingEmpty($firstCellI, $firstCellJ)) { //First Cell
-                    if ($grid->isCoordOnGrid($firstCellI+1, $firstCellJ) &&
-                        $grid->isSurroundingEmpty($firstCellI+1, $firstCellJ)) { //Second Cell
-                        if ($grid->isCoordOnGrid($firstCellI+2, $firstCellJ) &&
-                            $grid->isSurroundingEmpty($firstCellI+2, $firstCellJ+2)) { //Third Cell
-                            if ($grid->isCoordOnGrid($firstCellI+3, $firstCellJ) &&
-                                $grid->isSurroundingEmpty($firstCellI+3, $firstCellJ)) { //Fourth Cell
+                if($grid->isSurroundingNotShip([$firstCellI, $firstCellJ])) { //First Cell
+                    if ($grid->isCellOnGrid([$firstCellI+1, $firstCellJ]) &&
+                        $grid->isSurroundingNotShip([$firstCellI+1, $firstCellJ])) { //Second Cell
+                        if ($grid->isCellOnGrid([$firstCellI+2, $firstCellJ]) &&
+                            $grid->isSurroundingNotShip([$firstCellI+2, $firstCellJ+2])) { //Third Cell
+                            if ($grid->isCellOnGrid([$firstCellI+3, $firstCellJ]) &&
+                                $grid->isSurroundingNotShip([$firstCellI+3, $firstCellJ])) { //Fourth Cell
                                 $grid->setShip(
                                     [$firstCellI, $firstCellJ],
                                     [$firstCellI+1, $firstCellJ],
@@ -128,13 +128,13 @@ class Ship {
         if ($this->rotation == 'H') {
             while (true) {
                 //Because the "L" will point up, check if "up" exists on grid. Checking the fourth cell.
-                if ($grid->isCoordOnGrid($firstCellI-1, $firstCellJ+2) && //Fourth Cell
-                    $grid->isSurroundingEmpty($firstCellI-1, $firstCellJ+2)) {
-                    if ($grid->isSurroundingEmpty($firstCellI, $firstCellJ)) { //First Cell
-                        if($grid->isCoordOnGrid($firstCellI, $firstCellJ+1) &&
-                            $grid->isSurroundingEmpty($firstCellI, $firstCellJ+1)) { //Second Cell
-                            if ($grid->isCoordOnGrid($firstCellI, $firstCellJ+2) &&
-                                $grid->isSurroundingEmpty($firstCellI, $firstCellJ+2)) { //Third Cell
+                if ($grid->isCellOnGrid([$firstCellI-1, $firstCellJ+2]) && //Fourth Cell
+                    $grid->isSurroundingNotShip([$firstCellI-1, $firstCellJ+2])) {
+                    if ($grid->isSurroundingNotShip([$firstCellI, $firstCellJ])) { //First Cell
+                        if($grid->isCellOnGrid([$firstCellI, $firstCellJ+1]) &&
+                            $grid->isSurroundingNotShip([$firstCellI, $firstCellJ+1])) { //Second Cell
+                            if ($grid->isCellOnGrid([$firstCellI, $firstCellJ+2]) &&
+                                $grid->isSurroundingNotShip([$firstCellI, $firstCellJ+2])) { //Third Cell
                                 $grid->setShip(
                                     [$firstCellI, $firstCellJ],
                                     [$firstCellI, $firstCellJ+1],
@@ -153,16 +153,16 @@ class Ship {
             while (true) {
                 //Because the "L" will point right, check if "right" exists on grid. Checking the fourth cell.
                 //Fourth Cell
-                if ($grid->isCoordOnGrid($firstCellI+2, $firstCellJ+1) &&
-                    $grid->isSurroundingEmpty($firstCellI+2, $firstCellJ+1)) {
+                if ($grid->isCellOnGrid([$firstCellI+2, $firstCellJ+1]) &&
+                    $grid->isSurroundingNotShip([$firstCellI+2, $firstCellJ+1])) {
                     //First Cell
-                    if ($grid->isSurroundingEmpty($firstCellI, $firstCellJ)) {
+                    if ($grid->isSurroundingNotShip([$firstCellI, $firstCellJ])) {
                         //Second Cell
-                        if($grid->isCoordOnGrid($firstCellI+1, $firstCellJ) &&
-                            $grid->isSurroundingEmpty($firstCellI+1, $firstCellJ)) {
+                        if($grid->isCellOnGrid([$firstCellI+1, $firstCellJ]) &&
+                            $grid->isSurroundingNotShip([$firstCellI+1, $firstCellJ])) {
                             //Third Cell
-                            if ($grid->isCoordOnGrid($firstCellI+2, $firstCellJ) &&
-                                $grid->isSurroundingEmpty($firstCellI+2, $firstCellJ)) {
+                            if ($grid->isCellOnGrid([$firstCellI+2, $firstCellJ]) &&
+                                $grid->isSurroundingNotShip([$firstCellI+2, $firstCellJ])) {
                                 $grid->setShip(
                                     [$firstCellI, $firstCellJ],
                                     [$firstCellI+1, $firstCellJ],

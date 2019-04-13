@@ -10,3 +10,10 @@ $dotShip2 = new Ship(Ship::DOT_SHAPE, $grid);
 $iHShip = new Ship(Ship::I_SHAPE, $grid);
 $lShip = new Ship(Ship::L_SHAPE, $grid);
 $grid->displayGrid();
+
+for ($i=0; $i<5; $i++) {
+    for ($j=4; $j<9; $j++) {
+        $grid->shoot($i, $j);
+    }
+}
+$grid->displayGrid();
