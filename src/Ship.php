@@ -59,7 +59,6 @@ class Ship {
         }
 
         $grid->setShip([$i, $j]);
-        $this->startPos = [$i, $j];
     }
 
     /**
@@ -178,13 +177,5 @@ class Ship {
                 $firstCellJ = rand(0,9);
             }
         }
-    }
-
-    public function getRotation() {
-        return $this->rotation;
-    }
-    
-    public function getShape() {
-        return $this->shape;
     }
 }

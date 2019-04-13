@@ -3,6 +3,25 @@ namespace Battleship;
 
 class Grid {
 
+    private const emptyCell = "0";
+    private const shipCell = "S";
+    private const missedShotCell = "*";
+    private const destroyedShipCell = "X";
+    private const emptyCellImgTag = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/empty.png' />";
+    private const shipCellImgTag = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/ship-ok.png' />";
+    private const missedShotCellImgTag = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/missed.png' />";
+    private const destroyedShipCellImgTag = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/ship-dead.png' />";
+    private const emptyCellImgTagCurrentShot = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/empty-current-shot.png' />";
+    private const shipCellImgTagCurrentShot = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/ship-ok-current-shot.png' />";
+    private const missedShotCellImgTagCurrentShot = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/missed-current-shot.png' />";
+    private const destroyedShipCellImgTagCurrentShot = "<img src='https://s3-us-west-2.amazonaws.com/n0r-dev/battleship/ship-dead-current-shot.png' />";
+
+    /**
+     * Represents current shot
+     * @var array
+     */
+    private $currentShot;
+
     /**
      * @var array
      */
@@ -10,26 +29,51 @@ class Grid {
 
     /**
      * Grid constructor.
+     * @param null $grid
      */
     public function __construct($grid = null) {
         if ($grid) $this->grid = $grid;
         else {
             for ($i=0; $i<10; $i++) {
-                $this->grid[$i] = array_fill(0, 10, '0');
+                $this->grid[$i] = array_fill(0, 10, self::emptyCell);
             }
         }
     }
 
     /**
-     * Displays the Grid. For dev purposes so far
+     * @return array|null
+     */
+    public function getGrid() {
+        return $this->grid;
+    }
+
+    /**
+     * Displays the Grid. Replaces dev cell notations (S,X,*) with img url tags
      */
     public function displayGrid() {
+        list($currentShotI, $currentShotJ) = $this->currentShot;
+        echo "<div style='margin-top:5rem; width:100%; text-align: center;'>";
+        echo "<div style='display:inline-block;'>";
         for ($i=0; $i<10; $i++) {
             for ($j=0; $j<10; $j++) {
-                echo $this->grid[$i][$j]." ";
+                switch($this->grid[$i][$j]) {
+                    case self::shipCell:
+                        echo $this->isCurrentShot($i, $j) ? self::shipCellImgTagCurrentShot : self::shipCellImgTag;
+                        break;
+                    case self::emptyCell:
+                        echo $this->isCurrentShot($i, $j) ? self::emptyCellImgTagCurrentShot : self::emptyCellImgTag;
+                        break;
+                    case self::missedShotCell:
+                        echo $this->isCurrentShot($i, $j) ? self::missedShotCellImgTagCurrentShot : self::missedShotCellImgTag;
+                        break;
+                    case self::destroyedShipCell:
+                        echo $this->isCurrentShot($i, $j) ? self::destroyedShipCellImgTagCurrentShot : self::destroyedShipCellImgTag;
+                        break;
+                }
             }
-            echo "\n";
+            echo "<br />";
         }
+        echo "</div></div>";
     }
 
     /**
@@ -40,7 +84,7 @@ class Grid {
     public function setShip(...$cells) {
         foreach ($cells as $cell) {
             if($this->isEmptyCell([$cell[0], $cell[1]])) {
-                $this->grid[$cell[0]][$cell[1]] = "S";
+                $this->grid[$cell[0]][$cell[1]] = self::shipCell;
             } else return false;
         }
         return true;
@@ -66,7 +110,7 @@ class Grid {
     }
 
     /**
-     * Checks if the surrounding area of a cell is not a ship
+     * Checks if the surrounding area of a cell is not a ship (area is off grid or empty)
      * @param array $cell
      * @Cell[0] - int $i grid array index
      * @Cell[1] - int $j grid array index
@@ -93,9 +137,6 @@ class Grid {
      * @return bool
      */
     public function isCellOnGrid(array $cell) {
-        echo "Cell ".$cell[0]." ".$cell[1];
-        echo isset($this->grid[$cell[0]][$cell[1]]) ? " is " : " is not ";
-        echo "on grid. \n";
         return isset($this->grid[$cell[0]][$cell[1]]);
     }
 
@@ -107,10 +148,7 @@ class Grid {
      * @return bool
      */
     public function isEmptyCell(array $cell) {
-        echo "Cell ".$cell[0]." ".$cell[1];
-        echo isset($this->grid[$cell[0]][$cell[1]]) ? " is " : " is not ";
-        echo "an empty cell. \n";
-        return $this->grid[$cell[0]][$cell[1]] === '0';
+        return $this->grid[$cell[0]][$cell[1]] === self::emptyCell;
     }
 
     /**
@@ -121,17 +159,18 @@ class Grid {
      * @return bool
      */
     private function isMissedShotCell(array $cell) {
-        echo "Cell ".$cell[0]." ".$cell[1];
-        echo $this->grid[$cell[0]][$cell[1]] == '*' ? " is " : " is not ";
-        echo "a missed shot. \n";
-        return $this->grid[$cell[0]][$cell[1]] == '*';
+        return $this->grid[$cell[0]][$cell[1]] == self::missedShotCell;
     }
 
+    /**
+     * Check if the grid cell is a destroyed cell
+     * @param array $cell
+     * @Cell[0] - int $i grid array index
+     * @Cell[1] - int $j grid array index
+     * @return bool
+     */
     private function isDestroyedShipCell(array $cell) {
-        echo "Cell ".$cell[0]." ".$cell[1];
-        echo $this->grid[$cell[0]][$cell[1]] == '*' ? " is " : " is not ";
-        echo "a destroyed ship (part). \n";
-        return $this->grid[$cell[0]][$cell[1]] == 'X';
+        return $this->grid[$cell[0]][$cell[1]] == self::destroyedShipCell;
     }
 
     /**
@@ -240,6 +279,8 @@ class Grid {
      * @param int $j
      */
     public function shoot(int $i, int $j) {
+        $this->currentShot = [$i, $j];
+        if ($this->isMissedShotCell([$i, $j])) return;
         if ($this->isEmptyCell([$i, $j])) {
             $this->markMissedCell($i, $j);
         } else {
@@ -252,10 +293,6 @@ class Grid {
      * @param array $cell
      */
     private function destroyShip(array $cell) {
-        echo "Cell ".$cell[0]." ".$cell[1];
-        echo isset($this->grid[$cell[0]][$cell[1]]) ? " is " : " is not ";
-        echo "being destroyed. \n";
-
         list($i, $j) = $cell;
         $this->markShipCellDestroyed($i, $j);
 
@@ -269,11 +306,45 @@ class Grid {
         if ($this->isShipCell($this->getUpLeftCell($i, $j))) $this->destroyShip($this->getUpLeftCell($i, $j));
     }
 
+    /**
+     * Marks cell as destroyed
+     * @param int $i
+     * @param int $j
+     */
     private function markShipCellDestroyed(int $i, int $j) {
-        $this->grid[$i][$j] = 'X';
+        $this->grid[$i][$j] = self::destroyedShipCell;
     }
 
+    /**
+     * Marks cell as missed shot
+     * @param int $i
+     * @param int $j
+     */
     private function markMissedCell(int $i, int $j) {
-        $this->grid[$i][$j] = '*';
+        $this->grid[$i][$j] = self::missedShotCell;
+    }
+
+    /**
+     * Checks if the game is over by iterating the grid and attempting to find a live ship
+     * @return bool
+     */
+    public function isGameOver() {
+        $gameOver = true;
+        for ($i=0; $i<10; $i++) {
+            for ($j=0; $j<10; $j++) {
+                if ($this->grid[$i][$j] == self::shipCell) $gameOver = false;
+            }
+        }
+        return $gameOver;
+    }
+
+    /**
+     * Given the cell, returns true if it's the current shot, false otherwise
+     * @param int $i
+     * @param int $j
+     * @return bool
+     */
+    private function isCurrentShot($i, $j) {
+        return $this->currentShot == [$i, $j];
     }
 }
