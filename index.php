@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once dirname(__DIR__) . '\Battleship\vendor\autoload.php';
+require_once getCwd() . '/vendor/autoload.php';
 use Battleship\Grid as Grid;
 use Battleship\Ship as Ship;
 
