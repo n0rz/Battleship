@@ -37,3 +37,10 @@ Preferably develop following task in PHP. Make sure code is posted in github or 
 
 
 Good luck!
+
+
+To install/use:
+
+Place it anywhere on your server.
+Run composer install
+Done!
