@@ -41,8 +41,8 @@ Good luck!
 
 # To install/use:
 
-**Place it anywhere on your server.
+**Place it anywhere on your server.**
 
-**Run composer install
+**Run composer install**
 
-**Done!
+**Done!**
